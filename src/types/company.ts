@@ -30,3 +30,38 @@ export interface CompanyListResponse {
   data: Company[];
   pagination: PaginationMeta;
 }
+
+/**
+ * One model-produced analysis of a company, as the API returns it.
+ *
+ * There is no status field: the row exists only once the worker has finished,
+ * so its presence is the completion signal. What happened before that lives on
+ * the job named by `jobId`.
+ */
+export interface CompanyAnalysis {
+  id: string;
+  organizationId: string;
+  companyId: string;
+  jobId: string;
+  question: string;
+  summary: string;
+  keyPoints: string[];
+  sentiment: "positive" | "neutral" | "negative";
+  confidence: number;
+  provider: string;
+  model: string;
+  inputTokens: number | null;
+  outputTokens: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CompanyAnalysisListResponse {
+  data: CompanyAnalysis[];
+}
+
+/** What requesting an analysis returns: 202, and the job that was queued. */
+export interface AnalysisAccepted {
+  jobId: string;
+  status: string;
+}

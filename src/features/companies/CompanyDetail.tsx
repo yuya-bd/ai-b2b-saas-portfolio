@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
+import { CompanyAnalyses } from "@/src/features/companies/CompanyAnalyses";
 import { fetchCompany } from "@/src/services/api/company.api";
 import type { Company } from "@/src/types/company";
 
@@ -64,6 +65,8 @@ export function CompanyDetail({ companyId }: { companyId: string }) {
           </dl>
         </CardContent>
       </Card>
+
+      <CompanyAnalyses companyId={companyId} />
 
       <Button variant="outline" asChild className="self-start">
         <Link href="/companies">Back to companies</Link>
