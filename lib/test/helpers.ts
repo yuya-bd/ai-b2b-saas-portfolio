@@ -11,6 +11,7 @@ import {
   tags,
   tenant,
 } from "@/lib/drizzle/schema";
+import { flushAfterCallbacks } from "@/lib/test/after-queue";
 
 /**
  * Delete everything belonging to one organization.
@@ -20,9 +21,13 @@ import {
  * (see `createTestOrganization`), so scoping the delete this way means one
  * file can never destroy another file's data mid-run.
  *
- * Order matters: children before parents, or the foreign keys reject it.
+ * Order matters: children before parents, or the foreign keys reject it — and
+ * so does waiting for the deferred writes first, or one arrives mid-delete and
+ * the foreign keys reject it anyway.
  */
 export async function cleanupOrganization(organizationId: string) {
+  await flushAfterCallbacks();
+
   const org = await db.query.organization.findFirst({
     where: eq(organization.id, organizationId),
   });
