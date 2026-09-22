@@ -1,4 +1,9 @@
-import type { Company, CompanyListResponse } from "@/src/types/company";
+import type {
+  AnalysisAccepted,
+  Company,
+  CompanyAnalysisListResponse,
+  CompanyListResponse,
+} from "@/src/types/company";
 
 /**
  * Client-side access to the companies API.
@@ -33,4 +38,32 @@ export async function fetchCompanies(params?: {
 
 export async function fetchCompany(id: string): Promise<Company> {
   return handle<Company>(await fetch(`/api/v1/companies/${id}`));
+}
+
+export async function fetchAnalyses(
+  companyId: string,
+): Promise<CompanyAnalysisListResponse> {
+  return handle<CompanyAnalysisListResponse>(
+    await fetch(`/api/v1/companies/${companyId}/analyses`),
+  );
+}
+
+/**
+ * Ask for an analysis.
+ *
+ * Resolves when the job is queued — 202, not 201. The analysis appears in
+ * `fetchAnalyses` only once the worker has produced it, which is why the
+ * caller gets a job id rather than a row.
+ */
+export async function requestAnalysis(
+  companyId: string,
+  question: string,
+): Promise<AnalysisAccepted> {
+  return handle<AnalysisAccepted>(
+    await fetch(`/api/v1/companies/${companyId}/analyses`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ question }),
+    }),
+  );
 }
