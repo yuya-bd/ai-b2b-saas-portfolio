@@ -122,7 +122,14 @@ export function scheduleAuditLog(
 
   const ipAddress = extractIpAddress(request);
 
-  after(() => {
+  /**
+   * Returned, not merely called. `after` waits on a promise the callback hands
+   * back and drops one it never sees, so without the return the insert races
+   * the end of the request: it lands, or it does not, and nothing reports
+   * which. `record` swallows its own failures, so returning it cannot turn an
+   * audit problem into a failed request.
+   */
+  after(() =>
     auditLogService.record({
       organizationId: session.organizationId,
       userId: session.userId,
@@ -130,6 +137,6 @@ export function scheduleAuditLog(
       entityType: auditConfig.entityType,
       entityId: auditConfig.entityId,
       ipAddress,
-    });
-  });
+    }),
+  );
 }

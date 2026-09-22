@@ -20,14 +20,21 @@ process.env.AI_PROVIDER ??= "mock";
 
 /**
  * `after()` requires a request scope and throws outside one, which would make
- * every route test fail on the audit write. Running the callback synchronously
- * instead keeps the audit path exercised — a test can assert that the audit
- * row was written, rather than the behaviour being invisible under test.
+ * every route test fail on the audit write. Running the callback here instead
+ * keeps the audit path exercised — a test can assert that the audit row was
+ * written, rather than the behaviour being invisible under test.
+ *
+ * What the callback returns is parked in `after-queue.ts` rather than dropped,
+ * because the real `after` waits on it. `cleanupOrganization` drains the queue
+ * before deleting anything; see that module for what goes wrong otherwise.
  */
 vi.mock("next/server", async (importOriginal) => {
   const actual = await importOriginal<typeof import("next/server")>();
+  const { trackAfterCallback } = await import("./after-queue");
   return {
     ...actual,
-    after: (callback: () => void) => callback(),
+    after: (callback: () => unknown) => {
+      trackAfterCallback(callback());
+    },
   };
 });
