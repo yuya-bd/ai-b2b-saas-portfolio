@@ -13,6 +13,12 @@ const PUBLIC_PAGE_PREFIXES = [
   "/reset-password",
 ];
 
+/**
+ * Requests under this prefix are answered with JSON, never a redirect — see
+ * the refusal in `gate` for why.
+ */
+const API_PREFIX = "/api/";
+
 /** Paths that authenticate themselves and must not be redirected. */
 const SELF_AUTHENTICATING_PREFIXES = [
   // Better Auth's own endpoints.
@@ -67,6 +73,19 @@ function gate(request: NextRequest): NextResponse {
     request.cookies.get(SESSION_COOKIE_NAME);
 
   if (!sessionCookie) {
+    /**
+     * An API client has nowhere to render a login page, and following the
+     * redirect lands it on HTML with a 200 — a refusal wearing the shape of a
+     * success. Answer with the same 401 `getSessionContext` returns once a
+     * request does reach a handler, so a caller sees one body either way.
+     */
+    if (pathname.startsWith(API_PREFIX)) {
+      return NextResponse.json(
+        { error: "Unauthorized", message: "Sign in to continue." },
+        { status: 401, headers: { "WWW-Authenticate": "Bearer" } },
+      );
+    }
+
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
