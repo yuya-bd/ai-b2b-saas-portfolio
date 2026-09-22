@@ -12,6 +12,9 @@ import type { JOB_TYPE } from "@/lib/constants/jobs";
  *
  *   USE_MOCK_SQS=true   in-process array. Tests use this, so a test run needs
  *                       no container and cannot leak messages between files.
+ *                       It is per-process: a worker running outside the web
+ *                       process shares none of it, so do not reach for it in
+ *                       development.
  *   SQS_ENDPOINT set    ElasticMQ from docker-compose. Real SQS semantics —
  *                       visibility timeouts, receipt handles, long polling —
  *                       without an AWS account.
