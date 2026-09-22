@@ -42,7 +42,7 @@ Ports are offset from the usual defaults (Postgres 5433, Redis 6380, Mailpit
 | Caching | Redis with graceful degradation — no Redis means more queries, not an outage |
 | Background jobs | SQS producer and worker, with in-process, ElasticMQ and real-AWS modes |
 | Email | one interface, an SES implementation and a Mailpit one, React Email templates |
-| Testing | vitest against a real Postgres — 126 tests over the reference slice, the tag resource and the job worker |
+| Testing | vitest over the reference slice, the tag resource, the job worker and the request gate, most against a real Postgres |
 | API docs | hand-written OpenAPI served at `/v1/api-docs` |
 
 The reference slice is `companies`. Follow it from
@@ -51,7 +51,7 @@ The reference slice is `companies`. Follow it from
 
 ## Working on it
 
-`CLAUDE.md` holds the conventions. `.claude/skills/` holds five procedures:
+`CLAUDE.md` holds the conventions. `.claude/skills/` holds these procedures:
 
 - **add-api-resource** — build a new entity end to end
 - **write-integration-test** — the test shape, and what to cover
