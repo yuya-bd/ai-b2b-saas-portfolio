@@ -19,12 +19,16 @@ docker compose up -d --wait
 pnpm db:migrate
 pnpm db:test:create && pnpm db:test:migrate
 pnpm db:seed:dev
-pnpm dev
+pnpm dev:all
 ```
 
 Open http://localhost:3000 and sign in as `admin@example.com` with password
 `password1234`. The seed creates one user per role, so every permission branch
 can be exercised by hand.
+
+`dev:all` rather than `dev` because it starts the job worker too. Asking a
+company for an analysis queues work; with no worker the request is accepted and
+then nothing happens, which looks like a bug and is not one.
 
 Ports are offset from the usual defaults (Postgres 5433, Redis 6380, Mailpit
 8026) so this stack can run alongside another project's.
@@ -41,6 +45,7 @@ Ports are offset from the usual defaults (Postgres 5433, Redis 6380, Mailpit
 | Audit logging | one route-to-action table; writes happen after the response is sent |
 | Caching | Redis with graceful degradation — no Redis means more queries, not an outage |
 | Background jobs | SQS producer and worker, with in-process, ElasticMQ and real-AWS modes |
+| AI analysis | one provider interface behind an Anthropic implementation and a mock; the answer is validated into columns, so nothing downstream parses prose |
 | Email | one interface, an SES implementation and a Mailpit one, React Email templates |
 | Testing | vitest over the reference slice, the tag resource, the job worker and the request gate, most against a real Postgres |
 | API docs | hand-written OpenAPI served at `/v1/api-docs` |
