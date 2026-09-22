@@ -34,15 +34,3 @@ export async function fetchCompanies(params?: {
 export async function fetchCompany(id: string): Promise<Company> {
   return handle<Company>(await fetch(`/api/v1/companies/${id}`));
 }
-
-export async function createCompany(
-  input: Partial<Company> & { name: string },
-): Promise<Company> {
-  return handle<Company>(
-    await fetch("/api/v1/companies", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(input),
-    }),
-  );
-}
