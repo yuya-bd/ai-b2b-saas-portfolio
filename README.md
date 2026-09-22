@@ -14,6 +14,7 @@ see how a piece was solved before.
 ```sh
 pnpm install
 cp .env.example .env
+cp .env.test.example .env.test
 docker compose up -d --wait
 pnpm db:migrate
 pnpm db:test:create && pnpm db:test:migrate
@@ -67,7 +68,7 @@ pnpm build
 
 pnpm type-check
 pnpm lint
-pnpm test:run            # requires the test database
+pnpm test:run            # requires .env.test and the test database
 
 pnpm db:generate         # after changing lib/drizzle/schema
 pnpm db:migrate:all      # dev and test databases
