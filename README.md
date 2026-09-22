@@ -100,4 +100,8 @@ Nothing in it is tied to a particular deployment. The seeded users, the
 `example.com` addresses and every value in `.env.example` are fictitious
 placeholders.
 
+## License
+
+MIT — see [LICENSE](LICENSE).
+
 
