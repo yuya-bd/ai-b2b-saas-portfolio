@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm dev)",
+      "Bash(pnpm build)",
+      "Bash(pnpm type-check)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm lint:fix)",
+      "Bash(pnpm lint:strict)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test:run *)",
+      "Bash(pnpm test:coverage)",
+      "Bash(pnpm db:generate)",
+      "Bash(pnpm db:migrate)",
+      "Bash(pnpm db:test:migrate)",
+      "Bash(pnpm db:migrate:all)",
+      "Bash(pnpm db:seed:dev)",
+      "Bash(pnpm db:dbml)",
+      "Bash(pnpm worker:dev)",
+      "Bash(pnpm dev:email-preview)",
+      "Bash(docker compose ps)",
+      "Bash(docker compose logs *)",
+      "Bash(docker compose up -d *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)"
+    ],
+    "deny": ["Read(./.env)", "Read(./.env.*)"]
+  }
+}

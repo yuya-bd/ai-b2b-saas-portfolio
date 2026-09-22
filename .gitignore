@@ -1,0 +1,72 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Next.js
+next-env.d.ts
+.next
+out
+*.tsbuildinfo
+
+# Dependencies
+node_modules/
+
+# Test coverage
+coverage
+*.lcov
+
+# dotenv — only the examples are tracked
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Generated schema documentation (pnpm db:dbml)
+docs/schema.dbml
+
+# Editor / OS
+*.code-workspace
+.vscode-test
+.DS_Store
+
+# Scratch
+tmp/
+
+# NOTE: .claude/ is intentionally NOT ignored. The skills and settings.json in
+# it are part of what this repository exists to carry. Only the per-developer
+# override file is excluded — it accumulates machine-specific permissions.
+.claude/settings.local.json
+
+# ---------------------------------------------------------------------------
+# Added when this repository was split out for public hosting.
+# ---------------------------------------------------------------------------
+
+# Generic build output (the Next.js build lands in .next, above; these cover
+# tsc/bundler output and any tooling added later)
+dist/
+build/
+
+# Terraform — state files routinely contain plaintext secrets
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+
+# Credentials that must never reach a public remote, whatever the filename
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+.npmrc
+.netrc
+
+# Other framework / tool caches
+.vercel
+.turbo
+.cache/

@@ -1,0 +1,71 @@
+# Host ports are deliberately offset from the common defaults so this stack can
+# run alongside another project's stack without colliding.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: saas-foundation-db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: saas_foundation
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: saas-foundation-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  elasticmq:
+    image: softwaremill/elasticmq-native:1.6.9
+    container_name: saas-foundation-sqs
+    restart: unless-stopped
+    ports:
+      - "9326:9326"   # SQS-compatible API
+      - "9327:9327"   # stats UI
+    volumes:
+      - ./docker/elasticmq/elasticmq.conf:/opt/elasticmq.conf
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 9326 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: saas-foundation-mailpit
+    restart: unless-stopped
+    ports:
+      - "1026:1025"   # SMTP
+      - "8026:8025"   # Web UI
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8025/"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  postgres_data:
+  redis_data:
