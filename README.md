@@ -15,6 +15,16 @@ showing how a resource is built.
 It is a starting point and a reference, not a product. Copy it, or read it to
 see how a piece was solved before.
 
+## Architecture
+
+![Architecture diagram: client through the Next.js web UI to an API layer, an async job queue and worker calling an LLM provider, backed by Aurora Postgres, with CI/CD and CloudWatch alongside](docs/images/architecture.webp)
+
+Anonymized from the production system this was distilled from — no real
+account IDs, domains, IPs or customer data. The request path (client → web UI
+→ API → database) and the async path (API → job queue → worker → LLM
+provider → database) are decoupled, so a slow or failing model call never
+blocks the request that queued it.
+
 ## Getting started
 
 ```sh
